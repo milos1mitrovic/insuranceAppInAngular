@@ -1,0 +1,194 @@
+<div class="page-holder">
+  <p-toast></p-toast>
+
+  <div class="card">
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <button
+          pButton
+          pRipple
+          label="New"
+          icon="pi pi-plus"
+          class="p-button-success mr-2"
+          (click)="openNew()"
+        ></button>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table
+      #dt
+      [value]="clientList"
+      [rows]="10"
+      [paginator]="true"
+      [globalFilterFields]="[
+        'name',
+        'country.name',
+        'representative.name',
+        'status'
+      ]"
+      responsiveLayout="scroll"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">
+            Name <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="code">
+            Code <p-sortIcon field="code"></p-sortIcon>
+          </th>
+          <th pSortableColumn="duration">
+            Duration <p-sortIcon field="duration"></p-sortIcon>
+          </th>
+          <th pSortableColumn="numberOfAccounts">
+            Number of Accounts
+            <p-sortIcon field="numberOfAccounts"></p-sortIcon>
+          </th>
+          <th pSortableColumn="dateOfCreation">
+            Date of Creation <p-sortIcon field="dateOfCreation"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-client>
+        <tr>
+          <td>{{ client.name }}</td>
+          <td>{{ client.code }}</td>
+          <td>{{ client.duration }}</td>
+          <td>{{ client.numberOfAccounts }}</td>
+          <td>{{ client.dateOfCreation | date: "dd-MM-yyyy" }}</td>
+          <td>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-success mr-2"
+              (click)="editClient(client)"
+            ></button>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-warning"
+              (click)="deleteClient(client)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">
+          In total there are {{ clientList ? clientList.length : 0 }} clients.
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog
+    [(visible)]="clientDialog"
+    [style]="{ width: '450px' }"
+    header="Client Details"
+    [modal]="true"
+    styleClass="p-fluid"
+  >
+    <ng-template pTemplate="content">
+      <div class="field">
+        <label for="name">Name</label>
+        <input
+          class="p-inputtext p-component p-element"
+          type="text"
+          pInputText
+          id="name"
+          [(ngModel)]="client.name"
+          required
+          autofocus
+        />
+        <small class="p-error" *ngIf="submitted && !client.name"
+          >Name is required.</small
+        >
+      </div>
+      <div class="field">
+        <label for="code">Code</label>
+        <input
+          class="p-inputtext p-component p-element"
+          type="number"
+          pInputText
+          id="code"
+          [(ngModel)]="client.code"
+          required
+          autofocus
+        />
+        <small class="p-error" *ngIf="submitted && !client.code"
+          >Code is required.</small
+        >
+      </div>
+      <div class="field">
+        <label for="duration">Duration</label>
+        <input
+          class="p-inputtext p-component p-element"
+          type="text"
+          pInputText
+          id="duration"
+          [(ngModel)]="client.duration"
+          required
+          autofocus
+        />
+        <small class="p-error" *ngIf="submitted && !client.duration"
+          >Duration is required.</small
+        >
+      </div>
+      <div class="field">
+        <label for="numberOfAccounts">Number of Accounts</label>
+        <input
+          class="p-inputtext p-component p-element"
+          type="text"
+          pInputText
+          id="numberOfAccounts"
+          [(ngModel)]="client.numberOfAccounts"
+          required
+          autofocus
+        />
+        <small class="p-error" *ngIf="submitted && !client.numberOfAccounts"
+          >Number of Accounts is required.</small
+        >
+      </div>
+
+      <div class="field">
+        <label for="dateOfCreation">Date of Creation</label>
+        <p-calendar
+          [(ngModel)]="client.dateOfCreation"
+          [showIcon]="true"
+          [readonlyInput]="true"
+          dateFormat="dd-MM-yy"
+          inputId="dateOfCreation"
+        ></p-calendar>
+        <small class="p-error" *ngIf="submitted && !client.dateOfCreation"
+          >Date is required.</small
+        >
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        pRipple
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-text"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        label="Save"
+        icon="pi pi-check"
+        class="p-button-text"
+        (click)="saveProduct()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+
+  <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+</div>
